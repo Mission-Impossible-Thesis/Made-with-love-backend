@@ -1,4 +1,3 @@
-#  here import function like this :      from .views import functionfromview
 from django.urls import path
 from django.urls import include, re_path
 from .views import getCategoryStore
@@ -10,8 +9,10 @@ from .views import sellerVisit
 from .views import deleteItem
 from .views import updateItem
 
+from .views import getListOrder
 
 urlpatterns = [
+ path('<slug:cat>', getCategoryStore.as_view(), ),  
  path('addItem', addItem.as_view()),
  path('delete/<int:pk>/', SnippetDetailSeller.as_view()),
  path('editProfile', SnippetDetailSeller.as_view()),
@@ -25,5 +26,7 @@ urlpatterns = [
  path('<slug:cat>', getCategoryStore.as_view(), )
  ]
 
- 
- 
+ path('order/list/<int:pk>', getListOrder.as_view(), )
+ path('<slug:cat>', getCategoryStore.as_view(), ),
+ path('order/list', getListOrder.as_view(), )
+ ]

@@ -8,15 +8,18 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, store_name  , description, delivery_time, image, location, category, password=None):
         if not email:
             raise ValueError('Users must have an email address')
+
+       
         
         email = self.normalize_email(email)
         user = self.model(email=email,  store_name = store_name , password = password, description=description, delivery_time=delivery_time, image=image, location=location, category=category)
 
-        user.set_password(password)
+               
         user.save()
 
         return user
@@ -37,7 +40,7 @@ class Seller(AbstractBaseUser, models.Model):
     store_name = models.CharField(max_length=45)
     location = models.CharField(max_length=200)
     description = models.CharField(max_length=200, blank=True, null=True)
-    delivery_time = models.CharField(db_column='delivery_time', max_length=45)  # Field renamed to remove unsuitable characters.
+    deliverytime = models.CharField(db_column='delivery_time', max_length=45)  # Field renamed to remove unsuitable characters.
     image = models.TextField()
     category=models.CharField(max_length=45)
     objects =  UserAccountManager()
@@ -54,7 +57,7 @@ class BuyerAccountManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, username=username , location=location, phonenumber=phonenumber, password=password, is_active=True)
 
-        user.set_password(password)
+        
         user.save()
 
         return user
@@ -108,7 +111,7 @@ class Item(models.Model):
     price = models.IntegerField()
     gender = models.CharField(max_length=45, blank=True, null=True)
     types = models.CharField(max_length=45, blank=True, null=True)
-    size = models.IntegerField(blank=True, null=True)
+    size = models.CharField(max_length=45)
     image = models.TextField()
     material = models.CharField(max_length=45, blank=True, null=True)
     category = models.ForeignKey(Category,on_delete=models.CASCADE, blank=True, null=True)
@@ -132,11 +135,13 @@ class Order(models.Model):
     phonenumber = models.IntegerField(db_column='phoneNumber')  # Field name made lowercase.
     order_date = models.CharField(max_length=45)
     delievery_date = models.CharField(max_length=45, blank=True, null=True)
+    location = models.CharField(max_length=90)
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
 
     class Meta:
         # managed = True
         db_table = 'order'
+
 
 
 
