@@ -10,6 +10,7 @@ urlpatterns = [
     path('buyer/signup', signupBuyer.as_view(),),
     path('login', Login.as_view(),),
     path('buyer/signup', signupBuyer.as_view(),)
+    
     ,
     # path('login', Login.as_view(),)
 

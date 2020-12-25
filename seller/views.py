@@ -10,7 +10,9 @@ from django.shortcuts import render
 from accounts.models import Item
 from accounts.models import Seller
 from django.core.serializers import json
-import jwt,json
+from django.http import JsonResponse
+
+
 
 #importinf models of tables 
 from accounts.models import Item
@@ -72,7 +74,7 @@ class addItem(APIView):
         return Response ({'success': 'Add Item'})
 
 
-
+#to get items for seller
 class getItems(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -84,6 +86,8 @@ class getItems(APIView):
          print(json_serialized,"iteeeeeems" )
          return Response(json_serialized)
 
+
+#to get items for visitor
 class getItemsVisit(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -96,6 +100,7 @@ class getItemsVisit(APIView):
          return Response(json_serialized)
 
 
+#to get info for seller profile for visitor
 class sellerVisit(APIView):
     permission_classes = (permissions.AllowAny,)         
 
@@ -135,10 +140,21 @@ class SnippetDetailSeller(APIView):
     #      json_serialized = json_serializer.serialize(obj)
     #      print(json_serialized )
     #      return Response(json_serialized)
+    
 
+    # to get info for the seller
     def get(self, request,pk, format=None):
         
         print(pk)
+        #   data = self.request.data 
+        # store_Name = data['store_Name'] 
+        # description = data['description'] 
+        # location = data['location'] 
+        # delivery_date = data[' delivery_date '] 
+        # image = data['image']
+        # category_id = data['category_id']
+        # store_id = data['store_id'] 
+        # serializer = SnippetSerializer(snippet)
         obj1 = Seller.objects.filter(pk=pk)
         json_serializer = json.Serializer()
         json_serialized1 = json_serializer.serialize(obj1)
@@ -155,21 +171,56 @@ class SnippetDetailSeller(APIView):
         # dat =   JSON.dumps(myData)
         return Response(json_serialized1)
 
-    # def put(self, request, pk, format=None):
-    #     snippet = self.get_object(pk)
-    #     serializer = SnippetSerializer(snippet, data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#to update one item
+class updateItem(APIView):
+    permission_classes = (permissions.AllowAny,) 
+    def post(self, request, pk, format=None):
+        obj = Item.objects.get(pk=pk)
+        data = self.request.data 
+        print(data)
 
-    # def delete(self, request, pk, format=None):
-    #     snippet = self.get_object(pk)
-    #     snippet.delete()
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
-        # item = Item.objects.create (productname = productName, description=description, price=price, gender=gender,types=types, size=size, image=image, material=material)
+        productName = data['productName'] 
+        description = data['description'] 
+        price = data['price']
+        category = data['category']
+        image = data['url'] 
+
+        if category == "clothes":
+            gender = data['gender'] 
+            size = data['size'] 
+            category_id = Category.objects.get(category_id =200)
+            Item.objects.save (productname = productName, description=description, price=price, gender=gender, size=size, image=image, category=200)
+           
+            return Response ({'success': 'Item Editeeed'})
+        if(category == 'food'):
+            types = data['type'] 
+            category_id = Category.objects.get(category_id =100) 
+            Item.objects.save (productname = productName, description=description, price=price,types=types, image=image, category_id=100)
+            item.save()
+            return Response ({'success': 'Item Editeeed'})
+        if category == 'accessories':
+            material = data['material'] 
+            category_id = Category.objects.get(category_id =300)
+            Item.objects.save (productname = productName, description=description, price=price, image=image, material=material, category=300)
+            item.save()
+            return Response ({'success': 'Item Editeeed'})
+        if category == 'baby products':
+            gender = data['gender']
+            category_id = Category.objects.get(category_id =400)
+            Item.objects.save (productname = productName, description=description, price=price, gender=gender, image=image, category=400)
+            return Response ({'success': 'Item Editeeed'})
+
+        # category_id = data['category_id']
+        # store_id = data['store_id'] 
+        # item = Item.objects.create (productname = productName, description=description, price=price,  image=image)
         # item.save()
-        
+        return Response ({'success': 'Item Editeeeed'})
 
+#to delete one item
+class deleteItem(APIView):
+    permission_classes = (permissions.AllowAny,)  
 
-
+    def delete(self, request, pk, format=None):
+        Item.objects.filter(pk=pk).delete()
+        print('Deleeeete')
+        return Response('Deleteeeed')
