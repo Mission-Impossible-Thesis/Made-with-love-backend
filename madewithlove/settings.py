@@ -25,15 +25,16 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 DatabaseWrapper.data_types['DateTimeField'] = 'datetime' # fix for MySQL 5.5
-import pymysql
+# import pymysql
 
-pymysql.install_as_MySQLdb()
+# pymysql.install_as_MySQLdb()
 # BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '61ehb(o2(simh9_a6swe&&dvr53s%-*06g#8-cc4eukzyn9pkc'
+STRIPE_SECRET_KEY = 'sk_test_51I2FktCNmtNvriYQevst0uXD1j9WE53OaXVTFUAkDx8KaA6wZDyhEn71yvOJyMFvuR4opzUvEMJimQPXaLp9a4sw00IiZ4D7oD'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

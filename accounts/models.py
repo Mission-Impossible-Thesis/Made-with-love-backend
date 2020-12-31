@@ -13,8 +13,11 @@ class UserAccountManager(BaseUserManager):
     def create_user(self, email, store_name  , description, delivery_time, image, location, category, password=None):
         if not email:
             raise ValueError('Users must have an email address')
+<<<<<<< HEAD
+=======
 
         
+>>>>>>> b211e5e1564ba53a691a4168edb9f2241b595973
         email = self.normalize_email(email)
         s = 'gh@f$#$@&4hjhgjh'
         e = '786huyh8%3h'
@@ -23,13 +26,17 @@ class UserAccountManager(BaseUserManager):
         print(length)
         firstpart = password[0:iy]
         seconedpart = password[iy:len(password)]
+<<<<<<< HEAD
+        x =password[0] + s + firstpart[1:int(len(firstpart)/2)] + s + firstpart[int(len(firstpart)/2):] + seconedpart[:int(len(seconedpart)/2)] + e + seconedpart[int(len(seconedpart)/2):]
+        user = self.model(email=email,  store_name = store_name , password = x, description=description, delivery_time=delivery_time, image=image, location=location, category=category)
+=======
        
         x =password[0] + s + firstpart[1:int(len(firstpart)/2)] + s + firstpart[int(len(firstpart)/2):] + seconedpart[:int(len(seconedpart)/2)] + e + seconedpart[int(len(seconedpart)/2):]
         user = self.model(email=email,  store_name = store_name , password = x, description=description, delivery_time=delivery_time, image=image, location=location, category=category)
 
                
+>>>>>>> b211e5e1564ba53a691a4168edb9f2241b595973
         user.save()
-
         return user
     
     def create_superuser(self, email, name, password):
@@ -48,7 +55,7 @@ class Seller(AbstractBaseUser, models.Model):
     store_name = models.CharField(max_length=45)
     location = models.CharField(max_length=200)
     description = models.CharField(max_length=200, blank=True, null=True)
-    deliverytime = models.CharField(db_column='delivery_time', max_length=45)  # Field renamed to remove unsuitable characters.
+    delivery_time = models.CharField(db_column='delivery_time', max_length=45)  # Field renamed to remove unsuitable characters.
     image = models.TextField()
     category=models.CharField(max_length=45)
     objects =  UserAccountManager()
@@ -58,10 +65,9 @@ class Seller(AbstractBaseUser, models.Model):
         db_table = 'seller'
 
 class BuyerAccountManager(BaseUserManager):
-    def create_user(self, email, username , location, phonenumber,is_active, password=None ):
+    def create_user(self, email, username , location, phonenumber,is_active,password=None ):
         if not email:
             raise ValueError('Users must have an email address')
-        
         email = self.normalize_email(email)
         s = 'gh@f$#$@&4hjhgjh'
         e = '786huyh8%3h'
@@ -70,22 +76,15 @@ class BuyerAccountManager(BaseUserManager):
         print(length)
         firstpart = password[0:iy]
         seconedpart = password[iy:len(password)]
-       
         x =password[0] + s + firstpart[1:int(len(firstpart)/2)] + s + firstpart[int(len(firstpart)/2):] + seconedpart[:int(len(seconedpart)/2)] + e + seconedpart[int(len(seconedpart)/2):]
         user = self.model(email=email, username=username , location=location, phonenumber=phonenumber, password=x, is_active=True)
-
-        
         user.save()
-
         return user
-    
     def create_superuser(self, email, name, password):
         user = self.create_user(email, name, password)
-
         user.is_superuser = True
         user.is_staff = True
         user.save()
-
         return user
 
 class Buyer(AbstractBaseUser,models.Model):
@@ -153,6 +152,7 @@ class Order(models.Model):
     order_date = models.CharField(max_length=45)
     delievery_date = models.CharField(max_length=45, blank=True, null=True)
     location = models.CharField(max_length=90)
+    price = models.CharField(max_length=90)
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
 
     class Meta:
