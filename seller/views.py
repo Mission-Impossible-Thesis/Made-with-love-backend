@@ -52,33 +52,21 @@ class addItem(APIView):
             store = Seller.objects.get(store_id =store1)
             s = store.store_id
             category_id = Category.objects.get(category_id =100)
-<<<<<<< HEAD
-            item = Item.objects.create (productname = productName,store_id=s, description=description, price=price,types=types, image=image, category_id=category_id)
-=======
             item = Item.objects.create (productname = productName,store_id=s, description=description, price=price,types=types, image=image, category_id=100)
->>>>>>> 37bb2d8b27d1ebacabc9168ef5e1b7933c487876
             return Response ({'success': 'Add Item'})
         if category == 'accessories':
             material = data['material']
             store = Seller.objects.get(store_id =store1)
             s = store.store_id
             category_id = Category.objects.get(category_id =300)
-<<<<<<< HEAD
-            item = Item.objects.create (productname = productName,store_id=s, description=description, price=price, image=image, material=material, category=category_id)
-=======
             item = Item.objects.create (productname = productName,store_id=s, description=description, price=price, image=image, material=material, category=300)
->>>>>>> 37bb2d8b27d1ebacabc9168ef5e1b7933c487876
             return Response ({'success': 'Add Item'})
         if category == 'baby products':
             gender = data['gender']
             store = Seller.objects.get(store_id =store1)
             s = store.store_id
             category_id = Category.objects.get(category_id =400)
-<<<<<<< HEAD
-            item = Item.objects.create (productname = productName,store_id=s, description=description, price=price, gender=gender, image=image, category=category_id)
-=======
             item = Item.objects.create (productname = productName,store_id=s, description=description, price=price, gender=gender, image=image, category=400)
->>>>>>> 37bb2d8b27d1ebacabc9168ef5e1b7933c487876
             return Response ({'success': 'Add Item'})
         # category_id = data['category_id']
         # store_id = data['store_id']

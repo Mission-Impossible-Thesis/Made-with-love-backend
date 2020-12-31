@@ -13,11 +13,8 @@ class UserAccountManager(BaseUserManager):
     def create_user(self, email, store_name  , description, delivery_time, image, location, category, password=None):
         if not email:
             raise ValueError('Users must have an email address')
-<<<<<<< HEAD
-=======
 
         
->>>>>>> b211e5e1564ba53a691a4168edb9f2241b595973
         email = self.normalize_email(email)
         s = 'gh@f$#$@&4hjhgjh'
         e = '786huyh8%3h'
@@ -26,16 +23,11 @@ class UserAccountManager(BaseUserManager):
         print(length)
         firstpart = password[0:iy]
         seconedpart = password[iy:len(password)]
-<<<<<<< HEAD
-        x =password[0] + s + firstpart[1:int(len(firstpart)/2)] + s + firstpart[int(len(firstpart)/2):] + seconedpart[:int(len(seconedpart)/2)] + e + seconedpart[int(len(seconedpart)/2):]
-        user = self.model(email=email,  store_name = store_name , password = x, description=description, delivery_time=delivery_time, image=image, location=location, category=category)
-=======
        
         x =password[0] + s + firstpart[1:int(len(firstpart)/2)] + s + firstpart[int(len(firstpart)/2):] + seconedpart[:int(len(seconedpart)/2)] + e + seconedpart[int(len(seconedpart)/2):]
         user = self.model(email=email,  store_name = store_name , password = x, description=description, delivery_time=delivery_time, image=image, location=location, category=category)
 
                
->>>>>>> b211e5e1564ba53a691a4168edb9f2241b595973
         user.save()
         return user
     
