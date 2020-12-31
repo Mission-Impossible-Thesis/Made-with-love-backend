@@ -21,9 +21,18 @@ class PaymentView(APIView):
          token = request.data["token"]["id"]
          print(token,'tokeeeeeen')
          a="tok_1I3RymCNmtNvriYQ4O5ZQrKs tokeeeeeen"
-         
+         print(request.data)
+        #  quantity=order['quantity']
+        #  location = order['location']
+        #  store_id=data['store_id']
+        #  date=data['date']
+        #  obj = Buyer.objects.get(buyer_id = store_id)
+        #  item= Item.objects.get(item_id = item_id)
+        #  price= item.price
+        #  print('price', price)
+         total = request.data['token']['total'] 
          stripe.Charge.create(
-            amount=200,
+            amount=total,
             currency="usd",
             source=token,
             description="My First Test Charge (created for API docs)",

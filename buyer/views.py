@@ -2,7 +2,9 @@ from django.shortcuts import render
 from rest_framework.response import Response 
 from rest_framework.views import APIView
 from rest_framework import permissions
+from django.http import HttpResponse
 import json as JSON
+import jwt
 from django.core.serializers import json
 #importinf models of tables 
 from accounts.models import Item
@@ -16,14 +18,12 @@ stripe.api_key = 'sk_test_51I2FktCNmtNvriYQevst0uXD1j9WE53OaXVTFUAkDx8KaA6wZDyhE
 
 class orderItem(APIView):
     permission_classes = (permissions.AllowAny,)
-
     def post(self, request, format=None):
         data = self.request.data  
-        print('innnn')
+        print(request.data,"request")
         order = data['order']
         item_id = data['item_id']
         # print(item_id,'iiiddddd')
-        
         phonenumber = order['phoneNumber']
         print(phonenumber)
         quantity=order['quantity']
@@ -33,7 +33,6 @@ class orderItem(APIView):
         obj = Buyer.objects.get(buyer_id = store_id)
         item= Item.objects.get(item_id = item_id)
         price= item.price
-
         print('price', price)
         total = price * int(quantity)
         print(total)
@@ -100,14 +99,73 @@ class getCategoryItems(APIView):
         #     myData.append(obj1)
         # print(myData)
         
+class  buyerPassword(APIView):
+     permission_classes = (permissions.AllowAny,)
+     def post(self, request,format=None):
+         data = self.request.data
+         token = request.META.get('HTTP_AUTHORIZATION')
+         tole = jwt.decode(token, "SECRET_KEY")['email']
+         password = data['oldPassword']
+         newPassword = data['newPassword']
+         user = Buyer.objects.get(email= tole)
+         print(user.password )
+         s = 'gh@f$#$@&4hjhgjh'
+         e = '786huyh8%3h'
+         r ="".join(user.password.split(s))
+         t = "".join(r.split(e))
+         print (t)
+         
+         if password == t:
+             s = 'gh@f$#$@&4hjhgjh'
+             e = '786huyh8%3h'
+             length = (len(newPassword)/2)
+             iy = int(length)
+             print(length)
+             firstpart = newPassword[0:iy]
+             seconedpart = newPassword[iy:len(newPassword)]
+             x =newPassword[0] + s + firstpart[1:int(len(firstpart)/2)] + s + firstpart[int(len(firstpart)/2):] + seconedpart[:int(len(seconedpart)/2)] + e + seconedpart[int(len(seconedpart)/2):]
+             Buyer.objects.filter(email= tole).update(password =x )
+             return HttpResponse({"success":"password changed"} ,status="200")
+         else:
+            return HttpResponse({"Unauthorized":"password incorrect"} ,status="400")
         
+class  buyerUsername(APIView):
+     permission_classes = (permissions.AllowAny,)
+     def post(self, request,format=None):
+         data = self.request.data
+         token = request.META.get('HTTP_AUTHORIZATION')
+         tole = jwt.decode(token, "SECRET_KEY")['email']
+         username= data['userName']
+         Buyer.objects.filter(email= tole).update(username =username )
+         return HttpResponse({"success":"username changed"} ,status="200")
 
-
-class payment(APIView):
-    def post(request):
-
-         test_payment_intent = stripe.PaymentIntent.create(
-         amount=1000, currency='pln', 
-         payment_method_types=['card'],
-         receipt_email='test@example.com')
-         return Response(status=status.HTTP_200_OK, data=test_payment_intent)
+class  buyerLocation(APIView):
+     permission_classes = (permissions.AllowAny,)
+     def post(self, request,format=None):
+         data = self.request.data
+         token = request.META.get('HTTP_AUTHORIZATION')
+         tole = jwt.decode(token, "SECRET_KEY")['email']
+         location= data['location']
+         Buyer.objects.filter(email= tole).update(location =location )
+         return HttpResponse({"success":"location changed"} ,status="200")
+         
+class getAll(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def get(self, request):
+        token = request.META.get('HTTP_AUTHORIZATION')
+        print(token)
+        if not token:
+             return HttpResponse({"Unauthorized":"Unauthorized"} ,status="401")
+        elif token:
+                try:
+                    tole = jwt.decode(token, "SECRET_KEY")
+                    print(tole['email'],'hijuhuyu')
+                    email = tole['email']
+                    obj11 = Buyer.objects.filter(email = email)
+                    if obj11:
+                        json_serializer = json.Serializer()
+                        json_serialized = json_serializer.serialize(obj11)
+                        data1= JSON.loads(json_serialized)
+                        return Response (data1)
+                except jwt.DecodeError:
+                    return HttpResponse({"Unauthorized":"Unauthorized"} ,status="401")

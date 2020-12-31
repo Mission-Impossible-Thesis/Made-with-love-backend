@@ -1,16 +1,16 @@
 from django.shortcuts import render
 # Create your views here.
+from django.http import HttpResponse
 import json as JSON
 from django.shortcuts import render
-from rest_framework.response import Response 
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import permissions
 from django.shortcuts import render
-from accounts.models import Item
-from accounts.models import Seller
+
 from django.core.serializers import json
-# import jwt,json
-#importinf models of tables 
+import jwt
+#importinf models of tables
 from accounts.models import Item
 from accounts.models import Seller
 from accounts.models import Buyer
@@ -19,7 +19,7 @@ from accounts.models import Order
 class getCategoryStore (APIView):
     permission_classes = (permissions.AllowAny,)
     def get(self, request, cat):
-        # data = self.request.data  
+        # data = self.request.data
         print(cat)
         obj = Seller.objects.filter(category = cat)
         json_serializer = json.Serializer()
@@ -38,34 +38,47 @@ class addItem(APIView):
         category = data['category']
         image = data['url']
         store1 = data['user']
+        
         if category == "clothes":
             gender = data['gender']
             size = data['size']
             category_id = Category.objects.get(category_id =200)
             store = Seller.objects.get(store_id =store1)
             s = store.store_id
-            item = Item.objects.create (productname = productName, store_id=s, description=description, price=price, gender=gender, size=size, image=image, category=category_id)
+            item = Item.objects.create (productname = productName, store_id=s, description=description, price=price, gender=gender, size=size, image=image, category=200)
             return Response ({'success': 'Add Item'})
         if(category == 'food'):
             types = data['type']
             store = Seller.objects.get(store_id =store1)
             s = store.store_id
             category_id = Category.objects.get(category_id =100)
+<<<<<<< HEAD
             item = Item.objects.create (productname = productName,store_id=s, description=description, price=price,types=types, image=image, category_id=category_id)
+=======
+            item = Item.objects.create (productname = productName,store_id=s, description=description, price=price,types=types, image=image, category_id=100)
+>>>>>>> 37bb2d8b27d1ebacabc9168ef5e1b7933c487876
             return Response ({'success': 'Add Item'})
         if category == 'accessories':
             material = data['material']
             store = Seller.objects.get(store_id =store1)
             s = store.store_id
             category_id = Category.objects.get(category_id =300)
+<<<<<<< HEAD
             item = Item.objects.create (productname = productName,store_id=s, description=description, price=price, image=image, material=material, category=category_id)
+=======
+            item = Item.objects.create (productname = productName,store_id=s, description=description, price=price, image=image, material=material, category=300)
+>>>>>>> 37bb2d8b27d1ebacabc9168ef5e1b7933c487876
             return Response ({'success': 'Add Item'})
         if category == 'baby products':
             gender = data['gender']
             store = Seller.objects.get(store_id =store1)
             s = store.store_id
             category_id = Category.objects.get(category_id =400)
+<<<<<<< HEAD
             item = Item.objects.create (productname = productName,store_id=s, description=description, price=price, gender=gender, image=image, category=category_id)
+=======
+            item = Item.objects.create (productname = productName,store_id=s, description=description, price=price, gender=gender, image=image, category=400)
+>>>>>>> 37bb2d8b27d1ebacabc9168ef5e1b7933c487876
             return Response ({'success': 'Add Item'})
         # category_id = data['category_id']
         # store_id = data['store_id']
@@ -99,7 +112,7 @@ class getItemsVisit(APIView):
 
 #to get info for seller profile for visitor
 class sellerVisit(APIView):
-    permission_classes = (permissions.AllowAny,)         
+    permission_classes = (permissions.AllowAny,)
     def get(self, request,pk, format=None):
         print(pk)
         obj1 = Seller.objects.filter(store_id=pk)
@@ -116,7 +129,15 @@ class sellerVisit(APIView):
         myData.append(json_serialized)
         print("mydataaa",myData,"dataaend")
         # dat =   JSON.dumps(myData)
-        return Response(json_serialized1)         
+        return Response(json_serialized1)
+
+class deleteItem(APIView):
+    permission_classes = (permissions.AllowAny,)  
+    def delete(self, request, pk, format=None):
+        Item.objects.filter(pk=pk).delete()
+        print('Deleeeete')
+        return Response('Deleteeeed')
+
 class SnippetDetailSeller(APIView):
     """
     Retrieve, update or delete a snippet instance.
@@ -221,61 +242,156 @@ class updateItem(APIView):
     #     return Response(status=status.HTTP_204_NO_CONTENT)
         # item = Item.objects.create (productname = productName, description=description, price=price, gender=gender,types=types, size=size, image=image, material=material)
         # item.save()
-        
 class getListOrder (APIView):
      permission_classes = (permissions.AllowAny,)
      def get(self, request, pk):
          print(pk)
-        #  print(store_id)
-         obj = Order.objects.filter(pk=pk)
+         obj= Order.objects.filter(store_id=pk)
          json_serializer = json.Serializer()
          json_serialized = json_serializer.serialize(obj)
          data= JSON.loads(json_serialized)
-         print(data,'dataaaaaa')
+         print(data)
          for x in data:
-            print(x['fields']['buyer'],'buyeeeeeer')
-            obj1 = Buyer.objects.get(buyer_id = x['fields']['buyer'])
-            print(obj1.username)
-            x['fields']['buyer'] = obj1.username
-         for x in data:
-            print(x['fields']['item'])
-            obj1 = Item.objects.get(item_id = x['fields']['item'])
-            # obj2 = Item.objects.get(item_id = x['fields']['item'])
-
-            print(obj1.productname)
-            print(x['fields'], 'xxxxxxxx')
-            print(x['fields']['quantity'], 'quaaan')
-            y= x['fields']['quantity']
-            print(x['fields']['quantity'], 'yyyyyy')
-            print(obj1.price,'priiiiiiiiiiiiiiice')
-            x['fields']['item'] = obj1.productname 
-            # print(obj1.quantity,'quantity')
-            print(obj1.price*y,'multiiiiii')
-            x['fields']['price'] = obj1.price*y
- 
-
-        #  for y in data:
-        #    print(y['fields']['item'])
-        #     # obj1 = Item.objects.get(item_id = x['fields']['item'])
-        #    obj2 = Item.objects.get(item_id = x['fields']['item'])
-
-        #     # print(obj1.productname)
-        #    print(obj2.price,'priiiiiiiiiiiiiiice')
-        #     # x['fields']['item'] = obj1.productname 
-        #    x['fields']['item'] = obj2.price 
-            
-                
+             y=Item.objects.get(item_id = x["fields"]["item"] )
+             x["fields"]["item"] =y.productname
+             z=Buyer.objects.get(buyer_id = x["fields"]["buyer"] )
+             x["fields"]["buyer"]= z.username
          return Response (data)
-        #  obj = Buyer.objects.get(phonenumber = phonenumber)
-        #  print(obj.buyer_id)
+
+
+class  sellerPassword(APIView):
+     permission_classes = (permissions.AllowAny,)
+     def post(self, request,format=None):
+         data = self.request.data
+         token = request.META.get('HTTP_AUTHORIZATION')
+         tole = jwt.decode(token, "SECRET_KEY")['email']
+         newPassword = data['newPassword']
+         password = data['oldPassword']
+         user = Seller.objects.get(email= tole)
+         print(password,"new" )
          
-        #  return Response (data)
+         s = 'gh@f$#$@&4hjhgjh'
+         e = '786huyh8%3h'
+         r ="".join(user.password.split(s))
+         t = "".join(r.split(e))
+         print (t,"db")
+         
+         if password == t:
+             s = 'gh@f$#$@&4hjhgjh'
+             e = '786huyh8%3h'
+             length = (len(newPassword)/2)
+             iy = int(length)
+             print(length)
+             firstpart = newPassword[0:iy]
+             seconedpart = newPassword[iy:len(newPassword)]
+             x =newPassword[0] + s + firstpart[1:int(len(firstpart)/2)] + s + firstpart[int(len(firstpart)/2):] + seconedpart[:int(len(seconedpart)/2)] + e + seconedpart[int(len(seconedpart)/2):]
+             Seller.objects.filter(email= tole).update(password =x)
+             return HttpResponse({"success":"password changed"} ,status="200")
+         else:
+            return HttpResponse({"Unauthorized":"password incorrect"} ,status="400")
+
+class  sellerStorename(APIView):
+     permission_classes = (permissions.AllowAny,)
+     def post(self, request,format=None):
+         data = self.request.data
+         token = request.META.get('HTTP_AUTHORIZATION')
+         tole = jwt.decode(token, "SECRET_KEY")['email']
+         storeName= data['storeName']
+         Seller.objects.filter(email= tole).update(store_name =storeName )
+         return HttpResponse({"success":"location changed"} ,status="200") 
+        #  user = Seller.objects.get(email= tole)
+        #  if user:
+        #      Seller.objects.filter(email= tole).update(store_name =storeName )
+        #      return HttpResponse({"success":"location changed"} ,status="200")   
+        #  else:
+        #     return HttpResponse({"Unauthorized":"password incorrect"} ,status="400")
+
+class editItem (APIView):
+    permission_classes = (permissions.AllowAny,)
+    def post(self, request, pk):
+        data = self.request.data
+        if not data:
+            return HttpResponse({"Error":"please enter your information"} ,status="401")
+        elif data:
+            try:
+                gender = data['gender']
+                size = data['size']
+                productName = data['product']
+                description = data['description']
+                price = data['price']
+                image = data['url']
+                material = data['material']
+                types = data['type']
+                image = data['url']
+                Item.objects.filter(item_id= pk).update(productname = productName, description=description, price=price, gender=gender,types=types, size=size, image=image, material=material)
+                return HttpResponse({"success":"updated"} ,status="200")
+            except Item.DoesNotExist:
+                return HttpResponse({"Error":"ERROR"} ,status="401")
 
 #to delete one item
 class deleteItem(APIView):
     permission_classes = (permissions.AllowAny,)  
 
-    def delete(self, request, pk, format=None):
-        Item.objects.filter(pk=pk).delete()
-        print('Deleeeete')
-        return Response('Deleteeeed')
+class  sellerLocation(APIView):
+     permission_classes = (permissions.AllowAny,)
+     def post(self, request,format=None):
+         data = self.request.data
+         token = request.META.get('HTTP_AUTHORIZATION')
+         tole = jwt.decode(token, "SECRET_KEY")['email']
+         location= data['location']
+         Seller.objects.filter(email= tole).update(location =location )
+         return HttpResponse({"success":"location changed"} ,status="200")
+
+
+class  sellerDelivery(APIView):
+     permission_classes = (permissions.AllowAny,)
+     def post(self, request,format=None):
+         data = self.request.data
+         token = request.META.get('HTTP_AUTHORIZATION')
+         tole = jwt.decode(token, "SECRET_KEY")['email']
+         delivery= data['delivery']
+         Seller.objects.filter(email= tole).update(delivery_time =delivery )
+         return HttpResponse({"success":"delivery time changed"} ,status="200")
+
+
+class  sellerImage(APIView):
+     permission_classes = (permissions.AllowAny,)
+     def post(self, request,format=None):
+         data = self.request.data
+         token = request.META.get('HTTP_AUTHORIZATION')
+         tole = jwt.decode(token, "SECRET_KEY")['email']
+         image= data['image']
+         Seller.objects.filter(email= tole).update(image =image )
+         return HttpResponse({"success":"location changed"} ,status="200")
+
+class  sellerDescription(APIView):
+     permission_classes = (permissions.AllowAny,)
+     def post(self, request,format=None):
+         data = self.request.data
+         token = request.META.get('HTTP_AUTHORIZATION')
+         tole = jwt.decode(token, "SECRET_KEY")['email']
+         description= data['description']
+         Seller.objects.filter(email= tole).update(description =description )
+         return HttpResponse({"success":"description changed"} ,status="200")
+
+class getAll(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def get(self, request):
+        token = request.META.get('HTTP_AUTHORIZATION')
+        print(token)
+        if not token:
+             return HttpResponse({"Unauthorized":"Unauthorized"} ,status="401")
+        elif token:
+                try:
+                    tole = jwt.decode(token, "SECRET_KEY")
+                    print(tole['email'],'hijuhuyu')
+                    email = tole['email']
+                    obj11 = Seller.objects.filter(email = email)
+                    if obj11:
+                        json_serializer = json.Serializer()
+                        json_serialized = json_serializer.serialize(obj11)
+                        data1= JSON.loads(json_serialized)
+                        return Response (data1)
+                except jwt.DecodeError:
+                    return HttpResponse({"Unauthorized":"Unauthorized"} ,status="401")
+        
