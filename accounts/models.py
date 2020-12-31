@@ -137,6 +137,7 @@ class Order(models.Model):
     delievery_date = models.CharField(max_length=45, blank=True, null=True)
     location = models.CharField(max_length=90)
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
+    price = models.IntegerField()
 
     class Meta:
         # managed = True

@@ -10,6 +10,9 @@ from accounts.models import Seller
 from accounts.models import Buyer
 from accounts.models import Category
 from accounts.models import Order
+import stripe 
+stripe.api_key = 'sk_test_51I2FktCNmtNvriYQevst0uXD1j9WE53OaXVTFUAkDx8KaA6wZDyhEn71yvOJyMFvuR4opzUvEMJimQPXaLp9a4sw00IiZ4D7oD'
+
 
 class orderItem(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -19,6 +22,7 @@ class orderItem(APIView):
         print('innnn')
         order = data['order']
         item_id = data['item_id']
+        # print(item_id,'iiiddddd')
         
         phonenumber = order['phoneNumber']
         print(phonenumber)
@@ -26,10 +30,40 @@ class orderItem(APIView):
         location = order['location']
         store_id=data['store_id']
         date=data['date']
-        obj = Buyer.objects.get(phonenumber = phonenumber)
-        print(obj.buyer_id)
-        orders= Order.objects.create(buyer_id = obj.buyer_id, quantity=quantity, store_id=store_id, item_id=item_id,phonenumber=phonenumber, order_date=date, location=location )
+        obj = Buyer.objects.get(buyer_id = store_id)
+        item= Item.objects.get(item_id = item_id)
+        price= item.price
+
+        print('price', price)
+        total = price * int(quantity)
+        print(total)
+        orders= Order.objects.create(buyer_id = obj.buyer_id, quantity=quantity, store_id=store_id, item_id=item_id,phonenumber=phonenumber, order_date=date, location=location, price = total )
         return Response ({'success':'Order Submited'})
+
+
+# class checkOutItem(APIView):
+#     permission_classes = (permissions.AllowAny,)
+
+#     def post(self, request, format=None):
+#         data = self.request.data  
+#         print('innnn')
+#         order = data['order']
+#         item_id = data['item_id']
+        
+#         phonenumber = order['phoneNumber']
+#         print(phonenumber)
+#         quantity=order['quantity']
+#         location = order['location']
+#         store_id=data['store_id']
+#         date=data['date']
+#         obj = Buyer.objects.get(phonenumber = phonenumber)
+#         print(obj.buyer_id)
+#         orders= Order.objects.create(buyer_id = obj.buyer_id, quantity=quantity, store_id=store_id, item_id=item_id,phonenumber=phonenumber, order_date=date, location=location )
+#         return Response ({'success':'Order Submited'})
+
+
+
+
 class getCategoryItems(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -67,3 +101,13 @@ class getCategoryItems(APIView):
         # print(myData)
         
         
+
+
+class payment(APIView):
+    def post(request):
+
+         test_payment_intent = stripe.PaymentIntent.create(
+         amount=1000, currency='pln', 
+         payment_method_types=['card'],
+         receipt_email='test@example.com')
+         return Response(status=status.HTTP_200_OK, data=test_payment_intent)

@@ -25,15 +25,16 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 DatabaseWrapper.data_types['DateTimeField'] = 'datetime' # fix for MySQL 5.5
-import pymysql
+# import pymysql
 
-pymysql.install_as_MySQLdb()
+# pymysql.install_as_MySQLdb()
 # BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '61ehb(o2(simh9_a6swe&&dvr53s%-*06g#8-cc4eukzyn9pkc'
+STRIPE_SECRET_KEY = 'sk_test_51I2FktCNmtNvriYQevst0uXD1j9WE53OaXVTFUAkDx8KaA6wZDyhEn71yvOJyMFvuR4opzUvEMJimQPXaLp9a4sw00IiZ4D7oD'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -103,12 +104,11 @@ WSGI_APPLICATION = 'madewithlove.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'heroku_a31a3b4c3326b91',
-        'USER' :'b4152217a5ee2b',
-        'PASSWORD':'8f7ec055',
+        'NAME': 'heroku_2a31e7fa6357e1a',
+        'USER' :'b0996f1861d8a9',
+        'PASSWORD':'6912d189',
         'HOST': 'us-cdbr-east-02.cleardb.com',
         'PORT':'3306',
-      
     }
 }
 AUTHENTICATION_BACKENDS = (

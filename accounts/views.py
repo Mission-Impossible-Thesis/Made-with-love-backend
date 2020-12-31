@@ -75,80 +75,81 @@ class signupBuyer(APIView):
 
 class Login(APIView):
     permission_classes = (permissions.AllowAny,)
-
     def post(self, request):
         if not request.data:
             return Response({'Error': "Please provide username/password"}, status="400")
         email = request.data['email']
         password = request.data['password']
-       
         try:
             print('hello')
-
-            Seller.objects.get(email=email, password=password)
-            Buyer.objects.get(email=email, password=password)
-
+            Seller.objects.get(email=email)
+            user = Buyer.objects.get(email=email)
         except Buyer.DoesNotExist:
-            print('fgfg')
-            userSeller = Seller.objects.get(email=email, password=password)
-            if userSeller:
+            userSeller = Seller.objects.get(email=email)
+            password = self.request.data['password']
+            s = 'gh@f$#$@&4hjhgjh'
+            e = '786huyh8%3h'
+            r ="".join(userSeller.password.split(s))
+            t = "".join(r.split(e))
+            if t == self.request.data['password']:
                 payload = {
                     'email': userSeller.email,
             }
+            tok = jwt.encode(payload, "SECRET_KEY")
             jwt_token = {'token': jwt.encode(payload, "SECRET_KEY"),"id_store":userSeller.store_id, "type":"seller"}
             return Response(jwt_token)
-              
-
         except Seller.DoesNotExist:
-            userBuyer = Buyer.objects.get(email=email, password=password)
-
-            if userBuyer:
+            userBuyer = Buyer.objects.get(email=email)
+            password = self.request.data['password']
+            s = 'gh@f$#$@&4hjhgjh'
+            e = '786huyh8%3h'
+            r ="".join(userBuyer.password.split(s))
+            t = "".join(r.split(e))
+            if t == self.request.data['password']:
                 payload = {
-                    'email': userBuyer.email,
-            }
-            jwt_token = {'token': jwt.encode(payload, "SECRET_KEY"),"id_store":userBuyer.buyer_id, "type":"buyer"}
-            return Response( jwt_token)
-              
-
+                    'email': userBuyer.email
+                }
+            jwt_token = {'token': jwt.encode({
+                    'email': userBuyer.email
+                }, "SECRET_KEY"),"id_store":userBuyer.buyer_id, "type":"buyer"}
+            return Response(jwt_token)
         else :
             return Response(
             json.dumps({'Error': "Invalid credentials"}),
             status=400,
             content_type="application/json"
             )
+
+# class Login(APIView):
+#     permission_classes = (permissions.AllowAny,)
+
+#     def post(self, request, *args, **kwargs):
+#         if not request.data:
+#             return Response({'Error': "Please provide username/password"}, status="400")
         
+#         email = request.data['email']
+#         password = request.data['password']
+#         try:
+#             user = Buyer.objects.get(email=email)
+#             print(user)
+#         except Buyer.DoesNotExist:
 
+#             return Response({'Error':'nooo'}, status="400")
 
-class Login(APIView):
-    permission_classes = (permissions.AllowAny,)
-
-    def post(self, request, *args, **kwargs):
-        if not request.data:
-            return Response({'Error': "Please provide username/password"}, status="400")
-        
-        email = request.data['email']
-        password = request.data['password']
-        try:
-            user = Buyer.objects.get(email=email)
-            print(user)
-        except Buyer.DoesNotExist:
-
-            return Response({'Error':'nooo'}, status="400")
-
-        if user.check_password(password):
-            payload = {
+#         if user.check_password(password):
+#             payload = {
                 
-                'email': user.email,
-            }
-            jwt_token = {'token': jwt.encode(payload, "SECRET_KEY")}
+#                 'email': user.email,
+#             }
+#             jwt_token = {'token': jwt.encode(payload, "SECRET_KEY")}
 
-            return Response( json.dumps(jwt_token),
-              status=200,
-              content_type="application/json")
+#             return Response( json.dumps(jwt_token),
+#               status=200,
+#               content_type="application/json")
              
-        else:
-            return Response(
-              json.dumps({'Error': "Invalid credentials"}),
-              status=400,
-              content_type="application/json"
-            )
+#         else:
+#             return Response(
+#               json.dumps({'Error': "Invalid credentials"}),
+#               status=400,
+#               content_type="application/json"
+#             )

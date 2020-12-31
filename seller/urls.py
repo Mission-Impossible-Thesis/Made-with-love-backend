@@ -23,10 +23,8 @@ urlpatterns = [
  path('addItem', addItem .as_view(), ),
  path('profile/deleteitems/<int:pk>', deleteItem .as_view(), ),
  path('edititems/<int:pk>',updateItem .as_view(),),
- path('<slug:cat>', getCategoryStore.as_view(), )
- ]
-
- path('order/list/<int:pk>', getListOrder.as_view(), )
+ path('<slug:cat>', getCategoryStore.as_view(), ),
+ path('order/list/<int:pk>', getListOrder.as_view(), ),
  path('<slug:cat>', getCategoryStore.as_view(), ),
  path('order/list', getListOrder.as_view(), )
  ]
