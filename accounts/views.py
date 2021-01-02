@@ -65,6 +65,7 @@ class signupBuyer(APIView):
 
     def post(self, request, format=None):
         data = self.request.data  
+        print(data,'buyeeer')
         email = data['email']
         password = data['password']
         username = data['userName']
@@ -102,17 +103,25 @@ class Login(APIView):
             print('fgfg')
             userSeller = Seller.objects.get(email=email)
             password = self.request.data['password']
-            s = 'gh@f$#$@&4hjhgjh'
-            e = '786huyh8%3h'
-            r ="".join(userSeller.password.split(s))
-            t = "".join(r.split(e))
-            if t == self.request.data['password']:
+            if not password:
                 payload = {
-                    'email': userSeller.email,
-            }
-            tok = jwt.encode(payload, "SECRET_KEY")
-            jwt_token = {'token': jwt.encode(payload, "SECRET_KEY"),"id_store":userSeller.store_id, "type":"seller"}
-            return Response(jwt_token)
+                        'email': userSeller.email,
+                }
+                tok = jwt.encode(payload, "SECRET_KEY")
+                jwt_token = {'token': jwt.encode(payload, "SECRET_KEY"),"id_store":userSeller.store_id, "type":"seller"}
+                return Response(jwt_token)
+            elif password:
+                s = 'gh@f$#$@&4hjhgjh'
+                e = '786huyh8%3h'
+                r ="".join(userSeller.password.split(s))
+                t = "".join(r.split(e))
+                if t == self.request.data['password']:
+                    payload = {
+                        'email': userSeller.email,
+                    }
+                    tok = jwt.encode(payload, "SECRET_KEY")
+                    jwt_token = {'token': jwt.encode(payload, "SECRET_KEY"),"id_store":userSeller.store_id, "type":"seller"}
+                    return Response(jwt_token)
         except Seller.DoesNotExist:
             userBuyer = Buyer.objects.get(email=email)
             password = self.request.data['password']
@@ -120,6 +129,7 @@ class Login(APIView):
             e = '786huyh8%3h'
             r ="".join(userBuyer.password.split(s))
             t = "".join(r.split(e))
+            
             if t == self.request.data['password']:
                 payload = {
                     'email': userBuyer.email

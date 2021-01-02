@@ -27,7 +27,7 @@ class orderItem(APIView):
         phonenumber = order['phoneNumber']
         print(phonenumber)
         quantity=order['quantity']
-        location = order['location']
+        location = data['location']
         store_id=data['store_id']
         date=data['date']
         obj = Buyer.objects.get(buyer_id = store_id)
