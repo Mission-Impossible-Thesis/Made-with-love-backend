@@ -8,8 +8,9 @@ from django.urls import path
 urlpatterns = [
     path('seller/signup', signupSeller.as_view(),),
     path('buyer/signup', signupBuyer.as_view(),),
-    path('login', Login.as_view(),)
-
+    path('login', Login.as_view(),),
+    path('buyer/signup', signupBuyer.as_view(),)
+    
     ,
     # path('login', Login.as_view(),)
 

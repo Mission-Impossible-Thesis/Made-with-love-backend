@@ -1,23 +1,9 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-
-
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, store_name  , description, delivery_time, image, location, category, password=None):
         if not email:
             raise ValueError('Users must have an email address')
-<<<<<<< HEAD
-=======
-
-        
->>>>>>> b211e5e1564ba53a691a4168edb9f2241b595973
         email = self.normalize_email(email)
         s = 'gh@f$#$@&4hjhgjh'
         e = '786huyh8%3h'
@@ -26,28 +12,16 @@ class UserAccountManager(BaseUserManager):
         print(length)
         firstpart = password[0:iy]
         seconedpart = password[iy:len(password)]
-<<<<<<< HEAD
         x =password[0] + s + firstpart[1:int(len(firstpart)/2)] + s + firstpart[int(len(firstpart)/2):] + seconedpart[:int(len(seconedpart)/2)] + e + seconedpart[int(len(seconedpart)/2):]
         user = self.model(email=email,  store_name = store_name , password = x, description=description, delivery_time=delivery_time, image=image, location=location, category=category)
-=======
-       
-        x =password[0] + s + firstpart[1:int(len(firstpart)/2)] + s + firstpart[int(len(firstpart)/2):] + seconedpart[:int(len(seconedpart)/2)] + e + seconedpart[int(len(seconedpart)/2):]
-        user = self.model(email=email,  store_name = store_name , password = x, description=description, delivery_time=delivery_time, image=image, location=location, category=category)
-
-               
->>>>>>> b211e5e1564ba53a691a4168edb9f2241b595973
         user.save()
         return user
-    
     def create_superuser(self, email, name, password):
         user = self.create_user(email, name, password)
-
         user.is_superuser = True
         user.is_staff = True
         user.save()
-
         return user
-
 class Seller(AbstractBaseUser, models.Model):
     store_id = models.AutoField(primary_key=True)
     email = models.CharField(unique=True, max_length=110)
@@ -63,7 +37,6 @@ class Seller(AbstractBaseUser, models.Model):
     class Meta:
         # managed = True
         db_table = 'seller'
-
 class BuyerAccountManager(BaseUserManager):
     def create_user(self, email, username , location, phonenumber,is_active,password=None ):
         if not email:
@@ -86,7 +59,6 @@ class BuyerAccountManager(BaseUserManager):
         user.is_staff = True
         user.save()
         return user
-
 class Buyer(AbstractBaseUser,models.Model):
     buyer_id = models.AutoField(primary_key=True)
     email = models.CharField(unique=True, max_length=110)
@@ -97,29 +69,21 @@ class Buyer(AbstractBaseUser,models.Model):
     is_active = models.BooleanField(default=True)
     objects =  BuyerAccountManager()
     USERNAME_FIELD = 'email'
-
     def get_full_name(self):
         return self.username
-    
     def get_short_name(self):
         return self.username
-    
     def __str__(self):
         return self.email
     class Meta:
         # managed = True
         db_table = 'buyer'
-
-
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=45)
-
     class Meta:
         # managed = True
         db_table = 'category'
-
-
 class Item(models.Model):
     item_id = models.AutoField(primary_key=True)
     productname = models.CharField(db_column='productName', max_length=45)  # Field name made lowercase.
@@ -132,20 +96,15 @@ class Item(models.Model):
     material = models.CharField(max_length=45, blank=True, null=True)
     category = models.ForeignKey(Category,on_delete=models.CASCADE, blank=True, null=True)
     store = models.ForeignKey(Seller, on_delete=models.CASCADE, blank=True, null=True)
-
     category = models.ForeignKey(Category,on_delete=models.CASCADE, blank=True )
     store = models.ForeignKey(Seller, on_delete=models.CASCADE,  blank=True)
-
     class Meta:
         # managed = True
         db_table = 'item'
-
-
 class Order(models.Model):
     order_id = models.AutoField(primary_key=True)
     quantity = models.IntegerField()
     store = models.ForeignKey(Seller,on_delete= models.CASCADE)
-
     store = models.ForeignKey(Seller, on_delete= models.CASCADE)
     item = models.ForeignKey(Item, on_delete= models.CASCADE)
     phonenumber = models.IntegerField(db_column='phoneNumber')  # Field name made lowercase.
@@ -154,11 +113,24 @@ class Order(models.Model):
     location = models.CharField(max_length=90)
     price = models.CharField(max_length=90)
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
-
     class Meta:
         # managed = True
         db_table = 'order'
-
-
-
-
+class Comments(models.Model):
+    commentsid = models.AutoField(db_column='commentsID', primary_key=True)  # Field name made lowercase.
+    comment = models.CharField(max_length=300)
+    iditem = models.ForeignKey('Item', models.DO_NOTHING, db_column='IDitem', blank=True, null=True)  # Field name made lowercase.
+    idbuyer = models.ForeignKey(Buyer, models.DO_NOTHING, db_column='IDbuyer', blank=True, null=True)  # Field name made lowercase.
+    idstore = models.ForeignKey('Seller', models.DO_NOTHING, db_column='IDstore', blank=True, null=True)  # Field name made lowercase.
+    class Meta:
+        # managed = False
+        db_table = 'comments'
+class Review(models.Model):
+    review_id = models.AutoField(primary_key=True)
+    review = models.CharField(max_length=45, blank=True, null=True)
+    buyer = models.ForeignKey(Buyer, models.DO_NOTHING, blank=True, null=True)
+    store = models.ForeignKey('Seller', models.DO_NOTHING, blank=True, null=True)
+    item = models.ForeignKey(Item, models.DO_NOTHING, blank=True, null=True)
+    class Meta:
+        # managed = False
+        db_table = 'review'

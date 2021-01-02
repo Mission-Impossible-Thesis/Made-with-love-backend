@@ -3,6 +3,8 @@ from .views import getCategoryItems
 from .views import orderItem
 from django.urls import path
 from django.urls import include, re_path
+# from .views import payment
+# from .views import checkOutItem
 # ---> add here the rest of the url 
 # path('', signupSeller.as_view(),)
 

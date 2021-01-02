@@ -6,6 +6,9 @@ from .views import SnippetDetailSeller
 from .views import getItems
 from .views import getItemsVisit
 from .views import sellerVisit
+from .views import deleteItem
+from .views import updateItem
+
 from .views import getListOrder
 from .views import deleteItem
 from .views import sellerPassword

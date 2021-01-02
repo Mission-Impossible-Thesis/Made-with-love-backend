@@ -73,6 +73,8 @@ class addItem(APIView):
         item = Item.objects.create (productname = productName,store_id=s, description=description, price=price, gender=gender,types=types, size=size, image=image, material=material)
         item.save()
         return Response ({'success': 'Add Item'})
+
+#to get items for seller
 class getItems(APIView):
     permission_classes = (permissions.AllowAny,)
     def get(self, request,pk, format=None):
@@ -82,6 +84,9 @@ class getItems(APIView):
          json_serialized = json_serializer.serialize(obj)
          print(json_serialized,"iteeeeeems" )
          return Response(json_serialized)
+
+
+#to get items for visitor
 class getItemsVisit(APIView):
     permission_classes = (permissions.AllowAny,)
     def get(self, request,pk, format=None):
@@ -91,11 +96,14 @@ class getItemsVisit(APIView):
          json_serialized = json_serializer.serialize(obj)
          print(json_serialized,"iteeeeeems" )
          return Response(json_serialized)
+
+
+#to get info for seller profile for visitor
 class sellerVisit(APIView):
     permission_classes = (permissions.AllowAny,)
     def get(self, request,pk, format=None):
         print(pk)
-        obj1 = Seller.objects.filter(pk=pk)
+        obj1 = Seller.objects.filter(store_id=pk)
         json_serializer = json.Serializer()
         json_serialized1 = json_serializer.serialize(obj1)
         # print(json_serialized )
@@ -135,8 +143,20 @@ class SnippetDetailSeller(APIView):
     #      json_serialized = json_serializer.serialize(obj)
     #      print(json_serialized )
     #      return Response(json_serialized)
+    
+
+    # to get info for the seller
     def get(self, request,pk, format=None):
         print(pk)
+        #   data = self.request.data 
+        # store_Name = data['store_Name'] 
+        # description = data['description'] 
+        # location = data['location'] 
+        # delivery_date = data[' delivery_date '] 
+        # image = data['image']
+        # category_id = data['category_id']
+        # store_id = data['store_id'] 
+        # serializer = SnippetSerializer(snippet)
         obj1 = Seller.objects.filter(pk=pk)
         json_serializer = json.Serializer()
         json_serialized1 = json_serializer.serialize(obj1)
@@ -152,6 +172,51 @@ class SnippetDetailSeller(APIView):
         print("mydataaa",myData,"dataaend")
         # dat =   JSON.dumps(myData)
         return Response(json_serialized1)
+
+#to update one item
+class updateItem(APIView):
+    permission_classes = (permissions.AllowAny,) 
+    def post(self, request, pk, format=None):
+        obj = Item.objects.get(pk=pk)
+        data = self.request.data 
+        print(data)
+
+        productName = data['productName'] 
+        description = data['description'] 
+        price = data['price']
+        category = data['category']
+        image = data['url'] 
+
+        if category == "clothes":
+            gender = data['gender'] 
+            size = data['size'] 
+            category_id = Category.objects.get(category_id =200)
+            Item.objects.save (productname = productName, description=description, price=price, gender=gender, size=size, image=image, category=200)
+           
+            return Response ({'success': 'Item Editeeed'})
+        if(category == 'food'):
+            types = data['type'] 
+            category_id = Category.objects.get(category_id =100) 
+            Item.objects.save (productname = productName, description=description, price=price,types=types, image=image, category_id=100)
+            item.save()
+            return Response ({'success': 'Item Editeeed'})
+        if category == 'accessories':
+            material = data['material'] 
+            category_id = Category.objects.get(category_id =300)
+            Item.objects.save (productname = productName, description=description, price=price, image=image, material=material, category=300)
+            item.save()
+            return Response ({'success': 'Item Editeeed'})
+        if category == 'baby products':
+            gender = data['gender']
+            category_id = Category.objects.get(category_id =400)
+            Item.objects.save (productname = productName, description=description, price=price, gender=gender, image=image, category=400)
+            return Response ({'success': 'Item Editeeed'})
+
+        # category_id = data['category_id']
+        # store_id = data['store_id'] 
+        # item = Item.objects.create (productname = productName, description=description, price=price,  image=image)
+        # item.save()
+        return Response ({'success': 'Item Editeeeed'})
     # def put(self, request, pk, format=None):
     #     snippet = self.get_object(pk)
     #     serializer = SnippetSerializer(snippet, data=request.data)
@@ -251,6 +316,9 @@ class editItem (APIView):
             except Item.DoesNotExist:
                 return HttpResponse({"Error":"ERROR"} ,status="401")
 
+#to delete one item
+class deleteItem(APIView):
+    permission_classes = (permissions.AllowAny,)  
 
 class  sellerLocation(APIView):
      permission_classes = (permissions.AllowAny,)
